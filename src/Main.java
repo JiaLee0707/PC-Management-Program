@@ -6,7 +6,7 @@ public class Main extends JFrame{
 
 	public static PcManagement pm;
 
-	JMenuBar mb = new JMenuBar();
+	public static JMenuBar mb = new JMenuBar();
 	JMenu memberMenu = new JMenu("회원");
 	JMenu orderMenu = new JMenu("주문");
 	JMenu onOffMenu = new JMenu("pc 전원");

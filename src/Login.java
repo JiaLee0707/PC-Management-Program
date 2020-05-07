@@ -1,3 +1,5 @@
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,19 +43,45 @@ public class Login extends JFrame {
 	public void Login() {
 		LoginListener Loginlistener = new LoginListener("login");
 		JoinListener Joinlistener = new JoinListener("login");
-		lgoin = new JPanel(new GridLayout(3, 2));
-		// lgoin = new JPanel(new BorderLayout());
+//		lgoin = new JPanel(new GridLayout(3, 2));
+		lgoin = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
 
+        gbc.weightx = 1.0;
+        gbc.weighty = 2.0;
+		
 		loginBut.addActionListener(Loginlistener);
 		backBut.addActionListener(Joinlistener);
 
-		lgoin.add(id);
-		lgoin.add(idText);
-		lgoin.add(pw);
-		lgoin.add(pwText);
-		lgoin.add(loginBut);
-		if (!user.equals("manager"))
-			lgoin.add(backBut);
+		gbc.gridx=0;  
+        gbc.gridy=0;
+		lgoin.add(id, gbc);
+		gbc.gridx=1;  
+        gbc.gridy=0;
+        
+		lgoin.add(idText, gbc);
+		gbc.gridx=0;  
+        gbc.gridy=1;
+		lgoin.add(pw, gbc);
+		gbc.gridx=1;  
+        gbc.gridy=1;
+		lgoin.add(pwText, gbc);
+
+		if (!user.equals("manager")) {
+			gbc.gridx=0;  
+	        gbc.gridy=2;
+			lgoin.add(loginBut, gbc);
+			gbc.gridx=1;  
+	        gbc.gridy=2;
+			lgoin.add(backBut, gbc);
+		} else {			
+			gbc.gridx=0;  
+	        gbc.gridy=2;
+	        gbc.gridwidth = 3;
+	        gbc.gridheight = 1;
+			lgoin.add(loginBut, gbc);
+		}
 
 		setContentPane(lgoin);
 		setResizable(false);
@@ -122,16 +150,18 @@ public class Login extends JFrame {
 		public JoinListener(String panel) {
 			this.panel = panel;
 		}
-		
+
 		public void actionPerformed(ActionEvent e) {
-			if(panel.equals("login")) join();
-			else if(panel.equals("join")) {
+			if (panel.equals("login"))
+				join();
+			else if (panel.equals("join")) {
 //				db = new DB();
-				//Main.pm.db.memeberInsert(nameText.getText(), idText.getText(), pwText.getText());
+				// Main.pm.db.memeberInsert(nameText.getText(), idText.getText(),
+				// pwText.getText());
 				dispose();
-				//e.getActionCommand();
+				// e.getActionCommand();
 			}
-		
+
 		}
 	}
 }

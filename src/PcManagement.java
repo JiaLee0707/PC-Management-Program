@@ -22,11 +22,16 @@ public class PcManagement extends JPanel{
 	public void PcManagement() {
 		db = new DB();
 		
+		Main.mb.setSize(1280, 50);
 		setLayout(new GridLayout(4, 4, 10, 10));
+
 
 		// pc
 		JButton[] pcButton = new JButton[16];
-		for(int i=0;i<16; i++) {
+		pcButton[0] = new JButton("<html>" + 1+" pc" + "<br>"  + "ID : customer1 " + "<br>"  + "시간 : 00:30:24" + "<br>"  +"선불" + "</html>");
+		pcButton[0].addActionListener(pclistener);
+		add(pcButton[0]);
+		for(int i=1;i<16; i++) {
 			pcButton[i] = new JButton(i+1+" pc");
 			pcButton[i].addActionListener(pclistener);
 			add(pcButton[i]);
