@@ -12,9 +12,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Login extends JFrame {
-	JPanel lgoin;
-	JPanel join;
+	JPanel login = new JPanel(new GridBagLayout());
+	JPanel join = new JPanel(new GridLayout(4, 2));
 
+	LoginListener Loginlistener = new LoginListener();
+	JoinListener Joinlistener = new JoinListener();
+	
 //	DB db;
 
 	JLabel name = new JLabel("NAME");
@@ -32,58 +35,59 @@ public class Login extends JFrame {
 	String Userid, Userpw;
 
 	String user;
-
+	
 	public Login(String user) {
+		System.out.println("login");
 		this.user = user;
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(300, 200);
-		Login();
+		Login();		
 	}
 
 	public void Login() {
-		LoginListener Loginlistener = new LoginListener("login");
-		JoinListener Joinlistener = new JoinListener("login");
+		System.out.println("login-메소드");
+//		LoginListener Loginlistener = new LoginListener();// "login");
+//		JoinListener Joinlistener = new JoinListener();// "login");
 //		lgoin = new JPanel(new GridLayout(3, 2));
-		lgoin = new JPanel(new GridBagLayout());
+//		login = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
 
-        gbc.weightx = 1.0;
-        gbc.weighty = 2.0;
-		
+		gbc.weightx = 1.0;
+		gbc.weighty = 2.0;
+
 		loginBut.addActionListener(Loginlistener);
 		backBut.addActionListener(Joinlistener);
 
-		gbc.gridx=0;  
-        gbc.gridy=0;
-		lgoin.add(id, gbc);
-		gbc.gridx=1;  
-        gbc.gridy=0;
-        
-		lgoin.add(idText, gbc);
-		gbc.gridx=0;  
-        gbc.gridy=1;
-		lgoin.add(pw, gbc);
-		gbc.gridx=1;  
-        gbc.gridy=1;
-		lgoin.add(pwText, gbc);
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		login.add(id, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+
+		login.add(idText, gbc);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		login.add(pw, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		login.add(pwText, gbc);
 
 		if (!user.equals("manager")) {
-			gbc.gridx=0;  
-	        gbc.gridy=2;
-			lgoin.add(loginBut, gbc);
-			gbc.gridx=1;  
-	        gbc.gridy=2;
-			lgoin.add(backBut, gbc);
-		} else {			
-			gbc.gridx=0;  
-	        gbc.gridy=2;
-	        gbc.gridwidth = 3;
-	        gbc.gridheight = 1;
-			lgoin.add(loginBut, gbc);
+			gbc.gridx = 0;
+			gbc.gridy = 2;
+			login.add(loginBut, gbc);
+			gbc.gridx = 1;
+			gbc.gridy = 2;
+			login.add(backBut, gbc);
+		} else {
+			gbc.gridx = 0;
+			gbc.gridy = 2;
+			gbc.gridwidth = 3;
+			gbc.gridheight = 1;
+			login.add(loginBut, gbc);
 		}
 
-		setContentPane(lgoin);
+		setContentPane(login);
 		setResizable(false);
 		setVisible(true);
 		setLocationRelativeTo(null);
@@ -93,10 +97,11 @@ public class Login extends JFrame {
 	}
 
 	public void join() {
-		JoinListener listener = new JoinListener("join");
-		join = new JPanel(new GridLayout(4, 2));
+		System.out.println("login-join");
+//		JoinListener jlistener = new JoinListener();// "join");
+//		join = new JPanel(new GridLayout(4, 2));
 
-		backBut.addActionListener(listener);
+//		backBut.addActionListener(Joinlistener);
 
 		join.add(name);
 		join.add(nameText);
@@ -116,18 +121,15 @@ public class Login extends JFrame {
 	}
 
 	private class LoginListener implements ActionListener {
-		String panel;
-
-		public LoginListener(String panel) {
-			this.panel = panel;
-		}
 
 		public void Listener() {
+			System.out.println("login-action메소드");
 			Userid = idText.getText();
 			Userpw = pwText.getText();
 		}
 
 		public void actionPerformed(ActionEvent e) {
+			System.out.println("login-action");
 			JButton b = (JButton) e.getSource();
 
 			Listener();
@@ -139,29 +141,28 @@ public class Login extends JFrame {
 					JOptionPane.showMessageDialog(null, "ID 또는 PW가 틀렸습니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				Main.pm.db.select(Userid, Userpw);
+				String[] member = Main.pm.db.select(Userid, Userpw);
+				if(id==null) {
+					JOptionPane.showMessageDialog(null, "ID 또는 PW가 틀렸습니다.", "Message", JOptionPane.ERROR_MESSAGE);
+				} else {
+					Main.pm.Login(member);
+					dispose();
+				}
 			}
 		}
 	}
 
 	private class JoinListener implements ActionListener {
-		String panel;
-
-		public JoinListener(String panel) {
-			this.panel = panel;
-		}
 
 		public void actionPerformed(ActionEvent e) {
-			if (panel.equals("login"))
+			System.out.println("login-joinaction");
+			if(getContentPane() == login) {
 				join();
-			else if (panel.equals("join")) {
-//				db = new DB();
-				// Main.pm.db.memeberInsert(nameText.getText(), idText.getText(),
-				// pwText.getText());
+			} else {//if(getContentPane() == join){
+				Main.pm.db.memeberInsert(nameText.getText(), idText.getText(), pwText.getText());
 				dispose();
-				// e.getActionCommand();
 			}
-
 		}
 	}
+
 }

@@ -12,11 +12,13 @@ public class Main extends JFrame{
 	JMenu onOffMenu = new JMenu("pc 전원");
 	
 	public static void main(String[] args) {
+		System.out.println("Main");
 		Main main = new Main();
 		main.Frame();
 	}
 	
 	public void Frame() {
+		System.out.println("Main-Frame");
 		setTitle("PC방 관리 프로그램");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
