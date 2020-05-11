@@ -38,6 +38,7 @@ public class Login extends JFrame {
 	
 	public Login(String user) {
 		System.out.println("login");
+		setTitle(user + "pc Login");
 		this.user = user;
 		this.setSize(300, 200);
 		Login();		
@@ -98,10 +99,6 @@ public class Login extends JFrame {
 
 	public void join() {
 		System.out.println("login-join");
-//		JoinListener jlistener = new JoinListener();// "join");
-//		join = new JPanel(new GridLayout(4, 2));
-
-//		backBut.addActionListener(Joinlistener);
 
 		join.add(name);
 		join.add(nameText);
@@ -141,11 +138,11 @@ public class Login extends JFrame {
 					JOptionPane.showMessageDialog(null, "ID 또는 PW가 틀렸습니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				String[] member = Main.pm.db.select(Userid, Userpw);
-				if(id==null) {
+				String[] member = Main.pm.db.memberLogin(Userid, Userpw, user);
+				if(member==null) {
 					JOptionPane.showMessageDialog(null, "ID 또는 PW가 틀렸습니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				} else {
-					Main.pm.Login(member);
+					Main.pm.Login(member, user);
 					dispose();
 				}
 			}

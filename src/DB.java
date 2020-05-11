@@ -25,21 +25,29 @@ public class DB {
 		}
 	}
 
-	public String[] select(String id, String pw) {
+	public String[] memberLogin(String id, String pw, String pcIndex) {
 		System.out.println("db select");
-		String[] member = new String[4];
+		String[] member = new String[5];
 		try {
 			String sql = "SELECT * FROM member WHERE id=? AND pw=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
 			pstmt.setString(2, pw);
 			ResultSet srs = pstmt.executeQuery();
-			
+			System.out.println("asdf");
 			if(srs.next()) {
+				sql = "Update member SET pcLOG=? WHERE id=? AND pw=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pcIndex);
+				pstmt.setString(2, id);
+				pstmt.setString(3, pw);				
+				pstmt.executeUpdate();
+				
 				member[0] = srs.getString("name");
 				member[1] = srs.getString("time");
 				member[2] = srs.getString("pay");
 				member[3] = srs.getString("how");
+				member[4] = srs.getString("pcLOG");
 				System.out.print(srs.getString("name")+" ");
 				System.out.print(srs.getString("id")+" ");
 				System.out.println();
@@ -52,11 +60,26 @@ public class DB {
 		}
 		return null;
 	}
+	
+	public void memberLogout(String pcIndex) {
+		try {
+			String sql = "UPDATE member SET pcLOG=? WHERE pcLOG=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "0");			
+			pstmt.setString(2, pcIndex);			
+			pstmt.executeUpdate();
+				
+		}catch(SQLException ex) {
+			System.out.println("Logout SQLException:" + ex);
+		}catch(Exception ex) {
+			System.out.println("Logout Exception:" + ex);
+		}
+	}
 
 	public void memeberInsert(String name, String id, String pw) {
 		System.out.println("db insert");
 		try {
-			String sql = "insert into member (name, id, pw, time, pay, how, LOG) values (?, ?, ?, ?, ?, ?, ?)";
+			String sql = "insert into member (name, id, pw, time, pay, how, pcLOG) values (?, ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, name);
 			pstmt.setString(2, id);
@@ -64,26 +87,43 @@ public class DB {
 			pstmt.setString(4, "00:00:00");
 			pstmt.setString(5, "0");
 			pstmt.setString(6, null);
-			pstmt.setBoolean(7, false);
+			pstmt.setString(7, "0");
 
 			pstmt.executeUpdate();
 			Main.pm.Join();
-//			sql = "select * from member";
-//			pstmt = conn.prepareStatement(sql);
-//			ResultSet srs = pstmt.executeQuery();
-//			while(srs.next()) {
-//				System.out.print(srs.getString("name")+" ");
-//				System.out.print(srs.getString("id")+" ");
-//				System.out.print(srs.getString("pw")+" ");
-//				System.out.print(srs.getString("time")+" ");
-//				System.out.print(srs.getString("pay")+" ");
-//				System.out.println();
-//			}
 		} catch (SQLException ex) {
 			System.out.println("SQLException:" + ex);
 		} catch (Exception ex) {
 			System.out.println("Exception:" + ex);
 		}
 	}
+	
+	public String[] memberSelect(int pcIndext) {
+		String[] user = new String[6];
+		try {
+			String sql = "SELECT * FROM member WHERE pcLog=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pcIndext);
+			ResultSet srs = pstmt.executeQuery();
+			if(srs.next()) {
+				user[0] = srs.getString("name");
+				user[1] = srs.getString("id");
+				user[2] = srs.getString("time");
+				user[3] = srs.getString("pay");
+				user[4] = srs.getString("how");
+				user[5] = srs.getString("pcLog");
+				return user;
+			}
+		} catch (SQLException ex) {
+			System.out.println("SQLException:" + ex);
+		} catch (Exception ex) {
+			System.out.println("Exception:" + ex);
+		}
+		
+		return null;
+	}
 
+	public void memberUpdate() { 
+		
+	}
 }
