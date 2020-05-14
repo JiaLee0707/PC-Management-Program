@@ -37,7 +37,7 @@ public class Login extends JFrame {
 	String user;
 	
 	public Login(String user) {
-		System.out.println("login");
+		//System.out.println("login");
 		setTitle(user + "pc Login");
 		this.user = user;
 		this.setSize(300, 200);
@@ -45,7 +45,7 @@ public class Login extends JFrame {
 	}
 
 	public void Login() {
-		System.out.println("login-메소드");
+		//System.out.println("login-메소드");
 //		LoginListener Loginlistener = new LoginListener();// "login");
 //		JoinListener Joinlistener = new JoinListener();// "login");
 //		lgoin = new JPanel(new GridLayout(3, 2));
@@ -98,7 +98,7 @@ public class Login extends JFrame {
 	}
 
 	public void join() {
-		System.out.println("login-join");
+		//System.out.println("login-join");
 
 		join.add(name);
 		join.add(nameText);
@@ -142,7 +142,7 @@ public class Login extends JFrame {
 				if(member==null) {
 					JOptionPane.showMessageDialog(null, "ID 또는 PW가 틀렸습니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				} else {
-					Main.pm.Login(member, user);
+					Main.pm.Login(member);
 					dispose();
 				}
 			}

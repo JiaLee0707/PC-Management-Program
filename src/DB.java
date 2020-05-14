@@ -26,8 +26,8 @@ public class DB {
 	}
 
 	public String[] memberLogin(String id, String pw, String pcIndex) {
-		System.out.println("db select");
-		String[] member = new String[5];
+		//System.out.println("db select");
+		String[] member = new String[6];
 		try {
 			String sql = "SELECT * FROM member WHERE id=? AND pw=?";
 			pstmt = conn.prepareStatement(sql);
@@ -43,11 +43,12 @@ public class DB {
 				pstmt.setString(3, pw);				
 				pstmt.executeUpdate();
 				
-				member[0] = srs.getString("name");
-				member[1] = srs.getString("time");
-				member[2] = srs.getString("pay");
-				member[3] = srs.getString("how");
-				member[4] = srs.getString("pcLOG");
+				member[0] = srs.getString("name");				
+				member[1] = srs.getString("id");
+				member[2] = srs.getString("time");
+				member[3] = srs.getString("pay");
+				member[4] = srs.getString("how");
+				member[5] = srs.getString("pcLOG");
 				System.out.print(srs.getString("name")+" ");
 				System.out.print(srs.getString("id")+" ");
 				System.out.println();
@@ -77,7 +78,7 @@ public class DB {
 	}
 
 	public void memeberInsert(String name, String id, String pw) {
-		System.out.println("db insert");
+		//System.out.println("db insert");
 		try {
 			String sql = "insert into member (name, id, pw, time, pay, how, pcLOG) values (?, ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
@@ -123,7 +124,22 @@ public class DB {
 		return null;
 	}
 
-	public void memberUpdate() { 
-		
+	public void memberUpdate(String[] check, String id) { 
+		int pay = Integer.parseInt(check[1])*1000;
+		if(check[2]!=null) pay+=500;
+		try {
+			String sql = "UPDATE member SET TIME=?, pay=?, how=? WHERE id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "0"+check[1]+":"+ check[2] + ":00");			
+			pstmt.setString(2, Integer.toString(pay));			
+			pstmt.setString(3, check[0]);			
+			pstmt.setString(4, id);			
+			pstmt.executeUpdate();
+				
+		}catch(SQLException ex) {
+			System.out.println("Logout SQLException:" + ex);
+		}catch(Exception ex) {
+			System.out.println("Logout Exception:" + ex);
+		}
 	}
 }
