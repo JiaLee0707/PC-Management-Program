@@ -139,10 +139,16 @@ public class Login extends JFrame {
 				}
 			} else {
 				String[] member = Main.pm.db.memberLogin(Userid, Userpw, user);
+				System.out.println("name" + member[0]);
+				System.out.println("id" + member[1]);
+				System.out.println("time" + member[2]);
+				System.out.println("pay" + member[3]);
+				System.out.println("how" + member[4]);
+				System.out.println("pcLOG" + member[5]);
 				if(member==null) {
 					JOptionPane.showMessageDialog(null, "ID 또는 PW가 틀렸습니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				} else {
-					Main.pm.Login(member);
+					Main.pm.PCrepaint(member);
 					dispose();
 				}
 			}

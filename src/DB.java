@@ -34,7 +34,7 @@ public class DB {
 			pstmt.setString(1, id);
 			pstmt.setString(2, pw);
 			ResultSet srs = pstmt.executeQuery();
-			System.out.println("asdf");
+//			System.out.println("asdf");
 			if(srs.next()) {
 				sql = "Update member SET pcLOG=? WHERE id=? AND pw=?";
 				pstmt = conn.prepareStatement(sql);
@@ -42,16 +42,21 @@ public class DB {
 				pstmt.setString(2, id);
 				pstmt.setString(3, pw);				
 				pstmt.executeUpdate();
-				
+			}
+
+			sql = "SELECT * FROM member WHERE id=? AND pw=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, pw);
+			srs = pstmt.executeQuery();				
+			
+			if(srs.next()) {
 				member[0] = srs.getString("name");				
 				member[1] = srs.getString("id");
 				member[2] = srs.getString("time");
 				member[3] = srs.getString("pay");
 				member[4] = srs.getString("how");
 				member[5] = srs.getString("pcLOG");
-				System.out.print(srs.getString("name")+" ");
-				System.out.print(srs.getString("id")+" ");
-				System.out.println();
 				return member;
 			}
 		}catch(SQLException ex) {
@@ -136,10 +141,27 @@ public class DB {
 			pstmt.setString(4, id);			
 			pstmt.executeUpdate();
 				
-		}catch(SQLException ex) {
+		} catch(SQLException ex) {
 			System.out.println("Logout SQLException:" + ex);
-		}catch(Exception ex) {
+		} catch(Exception ex) {
 			System.out.println("Logout Exception:" + ex);
 		}
 	}
+	
+//	public void Time() {
+//		try {
+//			String sql = "UPDATE member SET TIME=?, pay=?, how=? WHERE id=?";
+//			pstmt = conn.prepareStatement(sql);
+//			pstmt.setString(1, "0"+check[1]+":"+ check[2] + ":00");			
+//			pstmt.setString(2, Integer.toString(pay));			
+//			pstmt.setString(3, check[0]);			
+//			pstmt.setString(4, id);			
+//			pstmt.executeUpdate();
+//			
+//		} catch(SQLException ex) {
+//			System.out.println("Time SQLException:" + ex);
+//		} catch(Exception ex) {
+//			System.out.println("Time Exception:" + ex);
+//		}
+//	}
 }

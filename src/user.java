@@ -86,7 +86,7 @@ public class user extends JFrame {
 		revalidate();
 		repaint();
 		
-		Main.pm.Login(user);
+		Main.pm.PCrepaint(user);
 	}
 	
 	private class logoutAction implements ActionListener {
