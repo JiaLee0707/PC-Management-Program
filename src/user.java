@@ -11,8 +11,9 @@ import javax.swing.JRadioButton;
 
 public class user extends JFrame {
 	JPanel userPanel = new JPanel();
+	Timer timer;
+	user user;
 	logoutAction logoutAction = new logoutAction();
-//	timeAction timeAction = new timeAction();
 	JLabel name; 
 	JLabel id;
 	JLabel time;
@@ -21,7 +22,6 @@ public class user extends JFrame {
 	JLabel pcLog;
 		
 	JButton timeBut = new JButton("시간 추가");
-//	JButton logoutBut = new JButton("로그아웃");
 	JButton logoutBut = new JButton("로그아웃");
 	
 	ButtonGroup howGroup = new ButtonGroup();
@@ -32,7 +32,7 @@ public class user extends JFrame {
 	JCheckBox hourBox2 = new JCheckBox("2시간");
 	JCheckBox minuteBox = new JCheckBox("30분");
 	
-	String[] user;
+	String[] userString;
 	
 	user(int pcIndex) {
 		//System.out.println("user");
@@ -42,15 +42,16 @@ public class user extends JFrame {
 		setResizable(false);
 		setVisible(true);
 		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		user = Main.pm.db.memberSelect(pcIndex);
-
-		name = new JLabel("이름 : " + user[0]);
-		id = new JLabel("ID : " + user[1]);
-		time = new JLabel("시간 : " + user[2]);
-		pay = new JLabel("금액 : " + user[3]);
-		how = new JLabel(user[4]);
-		pcLog = new JLabel(user[5] + " pc");
+		userString = Main.pm.db.memberSelect(pcIndex);
+		timer = new Timer(userString);
+		name = new JLabel("이름 : " + userString[0]);
+		id = new JLabel("ID : " + userString[1]);
+		time = new JLabel("시간 : " + userString[2]);
+		pay = new JLabel("금액 : " + userString[3]);
+		how = new JLabel(userString[4]);
+		pcLog = new JLabel(userString[5] + " pc");
 		
 		logoutBut.addActionListener(logoutAction);
 		timeBut.addActionListener(new timeAction());
@@ -74,26 +75,36 @@ public class user extends JFrame {
 		userPanel.add(logoutBut);
 	}
 	
+	public void user(user user) {
+		this.user = user;
+	}
+	
 	public void user() {
-		user = Main.pm.db.memberSelect(Integer.parseInt(user[5]));
+		userString = Main.pm.db.memberSelect(Integer.parseInt(userString[5]));
 		
-		name.setText("이름 : " + user[0]);
-		id.setText("ID : " + user[1]);
-		time.setText("시간 : " + user[2]);
-		pay.setText("금액 : " + user[3]);
-		how.setText(user[4]);
+		name.setText("이름 : " + userString[0]);
+		id.setText("ID : " + userString[1]);
+		time.setText("시간 : " + userString[2]);
+		pay.setText("금액 : " + userString[3]);
+		how.setText(userString[4]);
 		
 		revalidate();
 		repaint();
 		
-		Main.pm.PCrepaint(user);
+		Main.pm.PCrepaint(userString);
 	}
 	
 	private class logoutAction implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JButton b = (JButton) e.getSource();
-			Main.pm.db.memberLogout(user[5]);
+			
+			// 유저배열에 자신의 시간과 금액 시간 대입
+			userString[2] = timer.userString[2];
+					
+			Main.pm.db.memberLogout(userString);
 			Main.pm.Logout();
+			timer.interrupt();
+			timer = null;
 			dispose();
 		}
 	}
@@ -101,14 +112,9 @@ public class user extends JFrame {
 	private class timeAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String check[] = new String[3];
+			String check[] = new String[4];
 			int hour=0;
-			
-			if(First.isSelected()) {
-				check[0] = "선불";
-			} else if(Later.isSelected()) {
-				check[0] = "후불";
-			}
+			System.out.println("time");
 			
 			if(hourBox1.isSelected()) {
 				hour += 1;
@@ -116,14 +122,33 @@ public class user extends JFrame {
 			if(hourBox2.isSelected()) {
 				hour += 2;
 			}
-			check[1] = Integer.toString(hour);
+			check[0] = Integer.toString(hour);
 			if(minuteBox.isSelected()) {
-				check[2] = "30";
+				check[1] = "30";
 			} else {
-				check[2] = "00";
+				check[1] = "00";
 			}
 			
-			Main.pm.db.memberUpdate(check, user[1]);
+			check[2] = "00";
+			
+			if(First.isSelected()) {
+				check[3] = "선불";
+			} else if(Later.isSelected()) {
+				check[3] = "후불";
+			}
+			
+			if(timer.getState() != Thread.State.NEW) {
+				for(int i=0; i<3; i++) {
+					check[i] = Integer.toString(Integer.parseInt(check[i]) + timer.TimeInt[i]);
+					timer.TimeInt[i] = Integer.parseInt(check[i]);
+				}
+				String Time = Main.pm.db.memberUpdate(check, userString[1]);			
+			} else {
+				String Time = Main.pm.db.memberUpdate(check, userString[1]);			
+				timer.Timer(Time, user);
+				timer.start();
+			}
+			
 			user();
 		}
 		

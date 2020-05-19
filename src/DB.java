@@ -36,12 +36,14 @@ public class DB {
 			ResultSet srs = pstmt.executeQuery();
 //			System.out.println("asdf");
 			if(srs.next()) {
-				sql = "Update member SET pcLOG=? WHERE id=? AND pw=?";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, pcIndex);
-				pstmt.setString(2, id);
-				pstmt.setString(3, pw);				
-				pstmt.executeUpdate();
+				if(srs.getString("pcLOG").equals("0")) {
+					sql = "Update member SET pcLOG=? WHERE id=? AND pw=?";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, pcIndex);
+					pstmt.setString(2, id);
+					pstmt.setString(3, pw);				
+					pstmt.executeUpdate();					
+				}
 			}
 
 			sql = "SELECT * FROM member WHERE id=? AND pw=?";
@@ -67,12 +69,13 @@ public class DB {
 		return null;
 	}
 	
-	public void memberLogout(String pcIndex) {
+	public void memberLogout(String[] userString) {
 		try {
-			String sql = "UPDATE member SET pcLOG=? WHERE pcLOG=?";
+			String sql = "UPDATE member SET TIME=?, pcLOG=? WHERE pcLOG=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, "0");			
-			pstmt.setString(2, pcIndex);			
+			pstmt.setString(1, userString[2]);			
+			pstmt.setString(2, "0");			
+			pstmt.setString(3, userString[5]);			
 			pstmt.executeUpdate();
 				
 		}catch(SQLException ex) {
@@ -129,23 +132,33 @@ public class DB {
 		return null;
 	}
 
-	public void memberUpdate(String[] check, String id) { 
-		int pay = Integer.parseInt(check[1])*1000;
-		if(check[2]!=null) pay+=500;
+	public String memberUpdate(String[] check, String id) { 
+		int pay = Integer.parseInt(check[0])*1000;
+		if(check[1]!=null) pay+=500;
 		try {
 			String sql = "UPDATE member SET TIME=?, pay=?, how=? WHERE id=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, "0"+check[1]+":"+ check[2] + ":00");			
+			pstmt.setString(1, check[0]+":"+ check[1] + ":" + check[2]);			
 			pstmt.setString(2, Integer.toString(pay));			
-			pstmt.setString(3, check[0]);			
+			pstmt.setString(3, check[3]);			
 			pstmt.setString(4, id);			
 			pstmt.executeUpdate();
 				
+			sql = "SELECT * FROM member WHERE id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			ResultSet srs = pstmt.executeQuery();				
+			System.out.println("up");
+			if(srs.next()) {
+				System.out.println(srs.getString("TIME"));
+				return srs.getString("TIME");
+			}
 		} catch(SQLException ex) {
-			System.out.println("Logout SQLException:" + ex);
+			System.out.println("Update SQLException:" + ex);
 		} catch(Exception ex) {
-			System.out.println("Logout Exception:" + ex);
+			System.out.println("Update Exception:" + ex);
 		}
+		return null;
 	}
 	
 //	public void Time() {

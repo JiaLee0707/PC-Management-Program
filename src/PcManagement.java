@@ -14,7 +14,7 @@ public class PcManagement extends JPanel {
 	DB db;
 //	JPanel pc;
 	Login login = null;
-	user user = null;
+//	user user = null;
 	pcListener pclistener = new pcListener();
 	JButton[] pcButton;
 	int pcIndex = 0;
@@ -45,12 +45,13 @@ public class PcManagement extends JPanel {
 	}
 
 	public void PCrepaint(String[] member) {
+		int pc= Integer.parseInt(member[5]);
 		//System.out.println("pm-Login");
 		if (member[4] !=  null) {
-			pcButton[pcIndex-1].setText("<html>" + member[5] + " pc" + "<br>" + "ID : " + member[1] + "<br>" + "시간 : "
+			pcButton[pc-1].setText("<html>" + member[5] + " pc" + "<br>" + "ID : " + member[1] + "<br>" + "시간 : "
 					+ member[2] + "<br>" + member[4] + "</html>");
 		} else {
-			pcButton[pcIndex-1].setText(
+			pcButton[pc-1].setText(
 					"<html>" + member[5] + " pc" + "<br>" + "ID : " + member[1] + "<br>" + "시간 : " + member[2] + "</html>");
 		}
 		revalidate();		
@@ -79,7 +80,8 @@ public class PcManagement extends JPanel {
 				}
 			}
 			if(b.getText().contains("ID")) {
-				user = new user(pcIndex);
+				user user = new user(pcIndex);
+				user.user(user);
 			} else {				
 				login = new Login(Integer.toString(pcIndex));
 			}

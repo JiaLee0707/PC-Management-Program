@@ -34,12 +34,12 @@ public class Login extends JFrame {
 	String managerPw = "1234";
 	String Userid, Userpw;
 
-	String user;
+	String userSring;
 	
 	public Login(String user) {
 		//System.out.println("login");
 		setTitle(user + "pc Login");
-		this.user = user;
+		this.userSring = user;
 		this.setSize(300, 200);
 		Login();		
 	}
@@ -73,7 +73,7 @@ public class Login extends JFrame {
 		gbc.gridy = 1;
 		login.add(pwText, gbc);
 
-		if (!user.equals("manager")) {
+		if (!userSring.equals("manager")) {
 			gbc.gridx = 0;
 			gbc.gridy = 2;
 			login.add(loginBut, gbc);
@@ -130,7 +130,7 @@ public class Login extends JFrame {
 			JButton b = (JButton) e.getSource();
 
 			Listener();
-			if (user.equals("manager")) {
+			if (userSring.equals("manager")) {
 				if (Userid.equals(managerId) && Userpw.equals(managerPw)) {
 					dispose();
 					Main.pm.PcManagement();
@@ -138,17 +138,23 @@ public class Login extends JFrame {
 					JOptionPane.showMessageDialog(null, "ID 또는 PW가 틀렸습니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				String[] member = Main.pm.db.memberLogin(Userid, Userpw, user);
-				System.out.println("name" + member[0]);
-				System.out.println("id" + member[1]);
-				System.out.println("time" + member[2]);
-				System.out.println("pay" + member[3]);
-				System.out.println("how" + member[4]);
-				System.out.println("pcLOG" + member[5]);
+				String[] member = Main.pm.db.memberLogin(Userid, Userpw, userSring);
+//				System.out.println("name" + member[0]);
+//				System.out.println("id" + member[1]);
+//				System.out.println("time" + member[2]);
+//				System.out.println("pay" + member[3]);
+//				System.out.println("how" + member[4]);
+//				System.out.println("pcLOG" + member[5]);
 				if(member==null) {
 					JOptionPane.showMessageDialog(null, "ID 또는 PW가 틀렸습니다.", "Message", JOptionPane.ERROR_MESSAGE);
+				} else if(member[5].equals("0")) {
+					JOptionPane.showMessageDialog(null, "이미 사용중인 아이디입니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				} else {
 					Main.pm.PCrepaint(member);
+					if(!member[2].equals("00:00:00")) {
+						user user = new user(Integer.parseInt(userSring));
+						user.user(user);
+					}
 					dispose();
 				}
 			}
