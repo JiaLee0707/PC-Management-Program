@@ -45,6 +45,7 @@ public class Timer extends Thread{
 				
 				Thread.sleep(1000);
 			}
+			System.out.println("종료");
 		} catch (Exception e) {
 			System.out.println("Exception:" + e);
 		}

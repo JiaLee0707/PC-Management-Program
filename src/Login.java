@@ -151,7 +151,7 @@ public class Login extends JFrame {
 					JOptionPane.showMessageDialog(null, "이미 사용중인 아이디입니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				} else {
 					Main.pm.PCrepaint(member);
-					if(!member[2].equals("00:00:00")) {
+					if(member[2].equals("00:00:00")) {
 						user user = new user(Integer.parseInt(userSring));
 						user.user(user);
 					}

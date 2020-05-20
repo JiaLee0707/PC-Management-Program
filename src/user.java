@@ -13,7 +13,7 @@ public class user extends JFrame {
 	JPanel userPanel = new JPanel();
 	Timer timer;
 	user user;
-	logoutAction logoutAction = new logoutAction();
+//	logoutAction logoutAction = new logoutAction();
 	JLabel name; 
 	JLabel id;
 	JLabel time;
@@ -53,7 +53,7 @@ public class user extends JFrame {
 		how = new JLabel(userString[4]);
 		pcLog = new JLabel(userString[5] + " pc");
 		
-		logoutBut.addActionListener(logoutAction);
+		logoutBut.addActionListener(new logoutAction());
 		timeBut.addActionListener(new timeAction());
 		
 		howGroup.add(First);
@@ -102,9 +102,9 @@ public class user extends JFrame {
 			userString[2] = timer.userString[2];
 					
 			Main.pm.db.memberLogout(userString);
-			Main.pm.Logout();
 			timer.interrupt();
 			timer = null;
+			Main.pm.Logout();
 			dispose();
 		}
 	}
