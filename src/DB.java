@@ -26,7 +26,6 @@ public class DB {
 	}
 
 	public String[] memberLogin(String id, String pw, String pcIndex) {
-		//System.out.println("db select");
 		String[] member = new String[6];
 		try {
 			String sql = "SELECT * FROM member WHERE id=? AND pw=?";
@@ -34,7 +33,6 @@ public class DB {
 			pstmt.setString(1, id);
 			pstmt.setString(2, pw);
 			ResultSet srs = pstmt.executeQuery();
-//			System.out.println("asdf");
 			if(srs.next()) {
 				if(srs.getString("pcLOG").equals("0")) {
 					sql = "Update member SET pcLOG=? WHERE id=? AND pw=?";

@@ -137,16 +137,21 @@ public class user extends JFrame {
 				check[3] = "후불";
 			}
 			
-			if(timer.getState() != Thread.State.NEW) {
-				for(int i=0; i<3; i++) {
-					check[i] = Integer.toString(Integer.parseInt(check[i]) + timer.TimeInt[i]);
-					timer.TimeInt[i] = Integer.parseInt(check[i]);
-				}
-				String Time = Main.pm.db.memberUpdate(check, userString[1]);			
-			} else {
+			if(timer.getState() == Thread.State.NEW) {
 				String Time = Main.pm.db.memberUpdate(check, userString[1]);			
 				timer.Timer(Time, user);
-				timer.start();
+				timer.start();		
+			} else {
+				for(int i=0; i<3; i++) {
+					check[i] = Integer.toString(Integer.parseInt(check[i]) + timer.TimeInt[i]);
+					if(Integer.parseInt(check[i]) > 60 && i!=0) {
+						check[i-1] = Integer.toString(Integer.parseInt(check[i])/60);
+						check[i] = Integer.toString(Integer.parseInt(check[i])%60);
+						timer.TimeInt[i-1] = Integer.parseInt(check[i-1]);
+					}
+					timer.TimeInt[i] = Integer.parseInt(check[i]);
+				}
+				String Time = Main.pm.db.memberUpdate(check, userString[1]);
 			}
 			
 			user();
